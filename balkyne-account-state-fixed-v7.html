@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BALKYNE FENDS — Online Grocery</title>
+<style>
+:root{--g:#0b6b3a;--g2:#124d31;--cream:#f6f7f2;--ink:#173326;--muted:#66756d;--line:#e1e8e3;--gold:#c8952e;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--cream);color:var(--ink)}
+button{font:inherit;cursor:pointer}a{text-decoration:none;color:inherit}
+.top{background:var(--g2);color:white;text-align:center;padding:8px;font-size:12px;font-weight:800}
+nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:13px 5%;box-shadow:0 3px 15px #0000000b}
+.brand{display:flex;align-items:center;gap:10px}.menu{border:0;background:#edf5ef;color:var(--g);border-radius:10px;padding:9px 12px;font-size:22px}.logo{font-size:21px;font-weight:950;color:var(--g)}.logo span{color:var(--gold)}
+.navlinks{display:flex;gap:20px;font-size:14px;font-weight:800}.actions{display:flex;gap:8px}.account,.cart{border:0;border-radius:10px;padding:10px 13px;font-weight:850}.account{background:#edf5ef;color:var(--g)}.cart{background:var(--g);color:#fff}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center;padding:55px 5%;background:linear-gradient(110deg,#e8f5eb,#fff)}
+.hero h1{font-size:clamp(40px,5vw,65px);line-height:1.01;letter-spacing:-2.5px;margin:14px 0}.hero p{max-width:590px;color:var(--muted);font-size:17px;line-height:1.65}.tag{display:inline-block;background:#e2f2e7;color:var(--g);padding:7px 11px;border-radius:99px;font-size:11px;font-weight:900}.cta{display:inline-block;margin-top:7px;background:var(--g);color:#fff;padding:13px 19px;border-radius:10px;font-weight:850}
+.heroimg{height:330px;border-radius:25px;background:url("https://images.pexels.com/photos/7879834/pexels-photo-7879834.jpeg?auto=compress&cs=tinysrgb&w=1200") center/cover;box-shadow:0 18px 45px #0b6b3a22}
+section{padding:42px 5%}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}.head h2{margin:0;font-size:28px}.head p{margin:5px 0 0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 6px 20px #17332608}.pic{height:185px;border-radius:12px;background:center/cover}.potato{background-image:url("https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=700&q=85")}.tomato{background-image:url("https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=700&q=85")}.carrot{background-image:url("https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=700&q=85")}.broccoli{background-image:url("https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=700&q=85")}.rice{background-image:url("https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=700&q=85")}.wheat{background-image:url("https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=700&q=85")}.dal{background-image:url("https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=700&q=85")}
+.card h3{margin:12px 2px 4px}.meta{font-size:13px;color:var(--muted)}.price{display:flex;justify-content:space-between;align-items:center;margin-top:12px}.add{border:0;background:#e8f5ec;color:var(--g);padding:9px 12px;border-radius:9px;font-weight:850}
+.features{background:#fff}.features .grid{grid-template-columns:repeat(3,1fr)}.feature{padding:20px;border:1px solid var(--line);border-radius:15px}.feature p{color:var(--muted);line-height:1.5}
+footer{background:#103d27;color:#dce9df;padding:28px 5%;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.drawer{position:fixed;z-index:50;left:-320px;top:0;bottom:0;width:300px;background:#fff;padding:20px;box-shadow:10px 0 35px #0003;transition:.25s}.drawer.open{left:0}.shade{position:fixed;inset:0;background:#0008;z-index:49;display:none}.shade.open{display:block}.drawer h3{margin:5px 0 20px}.drawer button{width:100%;text-align:left;border:0;background:transparent;padding:14px;border-radius:10px;font-weight:750}.drawer button:hover{background:#edf5ef;color:var(--g)}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:60;padding:15px;overflow:auto}.modal.open{display:block}.panel{max-width:620px;margin:35px auto;background:#fff;border-radius:18px;padding:24px;position:relative}.close{position:absolute;right:14px;top:12px;border:0;border-radius:50%;width:34px;height:34px}.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.primary{border:0;background:var(--g);color:#fff;border-radius:10px;padding:11px 15px;font-weight:850}input,textarea,select{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #d7e1da;border-radius:10px;font:inherit}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.navlinks{display:none}.features .grid{grid-template-columns:1fr}}
+@media(max-width:520px){.hero{padding-top:35px}.heroimg{height:240px}.grid{gap:10px}.pic{height:135px}.account{display:block}nav,section,.hero,footer{padding-left:4%;padding-right:4%}}
+</style>
+</head>
+<body>
+<div class="top">🌱 BALKYNE FENDS • Free delivery across North India</div>
+<nav>
+  <div class="brand"><button class="menu" onclick="openMenu()">☰</button><div class="logo">BALKYNE <span>FENDS</span></div></div>
+  <div class="navlinks"><a href="#vegetables">Vegetables</a><a href="#grains">Grains</a><a href="#why">Why us</a></div>
+  <div class="actions"><button class="account" onclick="account()">👤 Login</button><button class="cart" onclick="showCart()">🛒 <span id="count">0</span></button></div>
+</nav>
+<div id="shade" class="shade" onclick="closeMenu()"></div>
+<aside id="drawer" class="drawer">
+  <h3>BALKYNE FENDS</h3>
+  <button onclick="home()">🏠 Dashboard</button><button onclick="showCart()">🛒 Cart</button>
+  <button onclick="orders()">📦 My Orders</button><button onclick="track()">🚚 Track Order / Cancel / Modify</button>
+  <button onclick="wishlist()">❤️ Wishlist</button><button onclick="about()">ℹ️ About</button>
+  <button onclick="report()">⚠️ Report</button><button onclick="account()">👤 Registration / Login</button>
+  <button onclick="logout()">🚪 Logout</button><button onclick="owner()">🔐 Owner Dashboard</button>
+</aside>
+
+<header class="hero">
+ <div><span class="tag">FRESH • SIMPLE • NORTH INDIA</span><h1>Everyday groceries, delivered to your door.</h1><p>Shop vegetables and grains online with free delivery. Add products to your cart and continue to checkout.</p><a class="cta" href="#vegetables">Shop now →</a></div>
+ <div class="heroimg"></div>
+</header>
+
+<section id="vegetables"><div class="head"><div><h2>🥬 Fresh vegetables</h2><p>Everyday kitchen essentials.</p></div><span class="tag">FRESH TODAY</span></div>
+<div class="grid">
+<article class="card"><div class="pic potato"></div><h3>Potatoes</h3><div class="meta">1 kg • Fresh produce</div><div class="price"><strong>₹35</strong><button class="add" onclick="add('Potatoes',35)">Add</button></div></article>
+<article class="card"><div class="pic tomato"></div><h3>Tomatoes</h3><div class="meta">1 kg • Fresh produce</div><div class="price"><strong>₹45</strong><button class="add" onclick="add('Tomatoes',45)">Add</button></div></article>
+<article class="card"><div class="pic carrot"></div><h3>Carrots</h3><div class="meta">500 g • Fresh produce</div><div class="price"><strong>₹30</strong><button class="add" onclick="add('Carrots',30)">Add</button></div></article>
+<article class="card"><div class="pic broccoli"></div><h3>Broccoli</h3><div class="meta">500 g • Fresh produce</div><div class="price"><strong>₹55</strong><button class="add" onclick="add('Broccoli',55)">Add</button></div></article>
+</div></section>
+
+<section id="grains"><div class="head"><div><h2>🌾 Staple grains</h2><p>Quality pantry essentials.</p></div><span class="tag">QUALITY GRAINS</span></div>
+<div class="grid">
+<article class="card"><div class="pic rice"></div><h3>Basmati Rice</h3><div class="meta">5 kg • Long grain</div><div class="price"><strong>₹480</strong><button class="add" onclick="add('Basmati Rice',480)">Add</button></div></article>
+<article class="card"><div class="pic wheat"></div><h3>Whole Wheat</h3><div class="meta">5 kg • Whole grain</div><div class="price"><strong>₹260</strong><button class="add" onclick="add('Whole Wheat',260)">Add</button></div></article>
+<article class="card"><div class="pic dal"></div><h3>Chana Dal</h3><div class="meta">1 kg • Premium dal</div><div class="price"><strong>₹105</strong><button class="add" onclick="add('Chana Dal',105)">Add</button></div></article>
+<article class="card"><div class="pic dal"></div><h3>Moong Dal</h3><div class="meta">1 kg • Premium dal</div><div class="price"><strong>₹125</strong><button class="add" onclick="add('Moong Dal',125)">Add</button></div></article>
+</div></section>
+
+<section id="why" class="features"><div class="head"><div><h2>Why BALKYNE FENDS?</h2><p>Simple grocery shopping for everyday needs.</p></div></div>
+<div class="grid"><div class="feature">🥬 <b>Fresh selection</b><p>Vegetables and pantry staples in one place.</p></div><div class="feature">🚚 <b>Free delivery</b><p>Delivery across North India.</p></div><div class="feature">🔐 <b>Secure accounts</b><p>Customer accounts can be connected to Supabase.</p></div></div></section>
+<footer><b>BALKYNE FENDS</b><span>© 2026 BALKYNE FENDS</span></footer>
+
+<div id="modal" class="modal"><div class="panel"><button class="close" onclick="closeModal()">×</button><div id="content"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://dkpazjmhahqpbsrgxlsp.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_TDxH6g8C5E-yIwwTSZlSaQ_NYdLJHUs';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+</script>
+<script>
+let cart=JSON.parse(localStorage.getItem('bf_cart')||'[]');
+
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem('bf_cart',JSON.stringify(cart));if($('count'))$('count').textContent=cart.length}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function openMenu(){$('drawer').classList.add('open');$('shade').classList.add('open')}
+function closeMenu(){$('drawer').classList.remove('open');$('shade').classList.remove('open')}
+function closeModal(){$('modal').classList.remove('open')}
+function popup(x){$('content').innerHTML=x;$('modal').classList.add('open')}
+function add(name,price){cart.push({name,price});save();alert(name+' added to cart ✓')}
+
+function showCart(){
+ closeMenu();const total=cart.reduce((s,x)=>s+Number(x.price),0);
+ popup('<h2>🛒 Your Cart</h2>'+(cart.length?cart.map(x=>'<div class="row"><span>'+esc(x.name)+'</span><b>₹'+Number(x.price).toFixed(2)+'</b></div>').join('')+
+ '<h3>Total: ₹'+total.toFixed(2)+'</h3><button id="checkoutBtn" class="primary">Proceed to Checkout</button>':'<p>Your cart is empty.</p>'));
+ if($('checkoutBtn'))$('checkoutBtn').addEventListener('click',checkout);
+}
+
+function checkout(){
+ popup('<h2>Checkout</h2><label>Name<input id="orderName" placeholder="Your name"></label><label>Phone<input id="orderPhone" placeholder="Phone number"></label><label>Address<textarea id="orderAddress" placeholder="Full delivery address"></textarea></label><label>Payment<select id="orderPayment"><option>Cash on Delivery</option><option>UPI</option><option>Card</option><option>Net Banking</option></select></label><button id="placeOrderBtn" class="primary">Place Order</button>');
+ $('placeOrderBtn').addEventListener('click',placeOrder);
+}
+
+async function placeOrder(){
+ const name=$('orderName').value.trim(),phone=$('orderPhone').value.trim(),address=$('orderAddress').value.trim(),payment=$('orderPayment').value;
+ if(!name||!phone||!address){alert('Please fill all details');return}
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session){alert('Please login or create an account before placing an order.');account();return}
+ if(!cart.length){alert('Your cart is empty.');return}
+ const items=cart.map(x=>({name:x.name,price:Number(x.price)})),total=cart.reduce((s,x)=>s+Number(x.price),0);
+ const {error}=await sb.from('orders').insert({user_id:session.user.id,customer_name:name,phone,address,payment_method:payment,items,total,status:'placed'});
+ if(error){alert('Could not place order: '+error.message);return}
+ cart=[];save();popup('<h2>✅ Order placed successfully</h2><p>Your order has been saved.</p>');
+}
+
+async function account(){
+ closeMenu();
+ const {data:{session}}=await sb.auth.getSession();
+ if(session){
+   popup('<h2>👤 My Account</h2><p><b>Logged in</b></p><p>'+esc(session.user.email||'')+'</p><button id="accountLogout" class="primary">Logout</button>');
+   document.getElementById('accountLogout').addEventListener('click',logout);
+   return;
+ }
+ popup('<h2>🔐 Registration / Login</h2><p id="authmsg">Create an account or log in.</p><label>Email<input id="authEmail" type="email" autocomplete="email" placeholder="Email"></label><label>Password<input id="authPassword" type="password" autocomplete="current-password" placeholder="Password"></label><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="signupBtn" class="primary" type="button">Create account</button><button id="signinBtn" class="primary" type="button">Login</button></div>');
+ document.getElementById('signupBtn').addEventListener('click',signUp);
+ document.getElementById('signinBtn').addEventListener('click',signIn);
+}
+
+async function signUp(){
+ const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
+ if(!email||!password){document.getElementById('authmsg').textContent='Enter email and password.';return}
+ const b=document.getElementById('signupBtn');b.disabled=true;b.textContent='Creating...';
+ const {error}=await sb.auth.signUp({email,password});
+ b.disabled=false;b.textContent='Create account';
+ document.getElementById('authmsg').textContent=error?error.message:'Account created. Check your email if confirmation is required.';
+ if(!error) refreshAuthUI();
+}
+
+async function signIn(){
+ const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
+ if(!email||!password){document.getElementById('authmsg').textContent='Enter email and password.';return}
+ const b=document.getElementById('signinBtn');b.disabled=true;b.textContent='Logging in...';
+ const {data,error}=await sb.auth.signInWithPassword({email,password});
+ b.disabled=false;b.textContent='Login';
+ if(error){document.getElementById('authmsg').textContent=error.message;return}
+ await refreshAuthUI();
+ document.getElementById('authmsg').textContent='Login successful.';
+ setTimeout(async()=>{closeModal();await refreshAuthUI()},700);
+}
+
+async function logout(){
+ const {error}=await sb.auth.signOut();
+ closeMenu();
+ if(error){alert('Logout failed: '+error.message);return}
+ await refreshAuthUI();
+ alert('Logged out successfully.');
+}
+
+async function refreshAuthUI(){
+ const {data:{session}}=await sb.auth.getSession();
+ const b=document.querySelector('.account');
+ if(b)b.textContent=session?'👤 Account':'👤 Login';
+ const loginMenu=[...document.querySelectorAll('#drawer button')].find(x=>x.textContent.includes('Registration / Login')||x.textContent.includes('My Account'));
+ if(loginMenu)loginMenu.textContent=session?'👤 My Account':'👤 Registration / Login';
+}
+async function orders(){
+ closeMenu();const {data:{session}}=await sb.auth.getSession();if(!session){account();return}
+ popup('<h2>📦 My Orders</h2><p>Loading...</p>');
+ const {data,error}=await sb.from('orders').select('*').eq('user_id',session.user.id).order('created_at',{ascending:false});
+ if(error){popup('<h2>📦 My Orders</h2><p>'+esc(error.message)+'</p>');return}
+ const list=(data||[]).map(o=>'<div class="row" style="display:block;margin:10px 0"><b>Order #'+esc(String(o.id).slice(0,8))+'</b><br>Status: <b>'+esc(o.status)+'</b><br>Total: ₹'+Number(o.total).toFixed(2)+'<br>'+new Date(o.created_at).toLocaleString()+'</div>').join('');
+ popup('<h2>📦 My Orders</h2>'+(list||'<p>No orders yet.</p>'));
+}
+
+function track(){closeMenu();popup('<h2>🚚 Track Order</h2><input id="trackId" placeholder="Order ID"><button id="trackBtn" class="primary">Track</button><div id="trackResult"></div>');$('trackBtn').addEventListener('click',trackOrder)}
+async function trackOrder(){
+ const id=$('trackId').value.trim();if(!id)return;const {data:{session}}=await sb.auth.getSession();if(!session){account();return}
+ const {data,error}=await sb.from('orders').select('id,status,total,created_at').eq('id',id).eq('user_id',session.user.id).maybeSingle();
+ $('trackResult').innerHTML=error?'<p>'+esc(error.message)+'</p>':!data?'<p>Order not found.</p>':'<div class="row" style="display:block;margin-top:15px"><b>Status: '+esc(data.status)+'</b><br>Total: ₹'+Number(data.total).toFixed(2)+'</div>';
+}
+
+async function owner(){
+ closeMenu();const {data:{session}}=await sb.auth.getSession();if(!session){account();return}
+ popup('<h2>👑 Owner Dashboard</h2><p>Checking access...</p>');
+ const r=await sb.rpc('is_admin');if(r.error){popup('<h2>👑 Owner Dashboard</h2><p>'+esc(r.error.message)+'</p>');return}
+ if(!r.data){popup('<h2>👑 Owner Dashboard</h2><p>Access denied. This account is not an owner/admin.</p>');return}
+ loadOwnerOrders();
+}
+async function loadOwnerOrders(){
+ const {data,error}=await sb.from('orders').select('*').order('created_at',{ascending:false});
+ if(error){popup('<h2>👑 Owner Dashboard</h2><p>'+esc(error.message)+'</p>');return}
+ const list=(data||[]).map(o=>'<div class="row" style="display:block;margin:12px 0;padding:14px;border:1px solid var(--line);border-radius:12px"><b>Order #'+esc(String(o.id).slice(0,8))+'</b><br>👤 '+esc(o.customer_name)+' • '+esc(o.phone)+'<br>📍 '+esc(o.address)+'<br>💰 ₹'+Number(o.total).toFixed(2)+' • '+esc(o.payment_method)+'<br>🕐 '+new Date(o.created_at).toLocaleString()+'<br><label>Status<select data-order-id="'+esc(o.id)+'" class="owner-status"><option value="placed" '+(o.status==='placed'?'selected':'')+'>Placed</option><option value="confirmed" '+(o.status==='confirmed'?'selected':'')+'>Confirmed</option><option value="out for delivery" '+(o.status==='out for delivery'?'selected':'')+'>Out for Delivery</option><option value="delivered" '+(o.status==='delivered'?'selected':'')+'>Delivered</option><option value="cancelled" '+(o.status==='cancelled'?'selected':'')+'>Cancelled</option></select></label></div>').join('');
+ popup('<h2>👑 Owner Dashboard</h2><p>Received orders: <b>'+(data||[]).length+'</b></p>'+(list||'<p>No orders received yet.</p>'));
+ document.querySelectorAll('.owner-status').forEach(x=>x.addEventListener('change',()=>updateOrderStatus(x.dataset.orderId,x.value)));
+}
+async function updateOrderStatus(id,status){const {error}=await sb.from('orders').update({status}).eq('id',id);if(error){alert('Could not update order: '+error.message);return}await loadOwnerOrders()}
+
+function wishlist(){closeMenu();popup('<h2>❤️ Wishlist</h2><p>Wishlist will be connected to customer accounts next.</p>')}
+function about(){closeMenu();popup('<h2>About BALKYNE FENDS</h2><p>Online shopping for vegetables and grains with free delivery across North India.</p>')}
+function report(){closeMenu();popup('<h2>⚠️ Report an issue</h2><textarea id="reportText" placeholder="Describe the issue"></textarea><button id="reportBtn" class="primary">Submit</button>');$('reportBtn').addEventListener('click',()=>alert('Report submitted.'))}
+function home(){closeMenu();window.scrollTo({top:0,behavior:'smooth'})}
+
+sb.auth.onAuthStateChange(()=>setTimeout(refreshAuthUI,0));
+save();refreshAuthUI();
+</script>
+</body>
+</html>
