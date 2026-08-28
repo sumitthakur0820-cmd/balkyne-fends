@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BALKYNE FENDS — Online Grocery</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--green:#0f6b3b;--green2:#16834a;--dark:#163226;--cream:#f7f8f4;--white:#fff;--muted:#66756d;--line:#e4e9e5;--gold:#d9a441;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--cream);color:var(--dark)}a{text-decoration:none;color:inherit}button{font:inherit}
+.top{background:#0b3d24;color:#fff;text-align:center;padding:8px 4%;font-size:12px;font-weight:700}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 5%;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;box-shadow:0 2px 12px #00000008}
+.brand-wrap{display:flex;align-items:center;min-width:220px}.menu-btn{background:#f0f5f1;color:var(--green);width:42px;height:42px;border-radius:11px;font-size:23px;line-height:1;margin-right:12px;border:0}.logo{font-size:22px;font-weight:950;letter-spacing:-.5px;color:var(--green)}.logo span{color:#b88625}
+.links{display:flex;gap:22px;font-weight:750;font-size:14px}.links a:hover{color:var(--green)}.nav-actions{display:flex;gap:8px;align-items:center}.account,.cart,.primary,.cta{border:0;border-radius:10px;font-weight:800}.cart,.primary,.cta{background:var(--green);color:#fff}.cart{padding:10px 14px}.account{background:#eef6f0;color:var(--green);padding:10px 13px}
+.hero{padding:55px 5%;display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center;background:linear-gradient(105deg,#edf7ef,#fff);border-bottom:1px solid var(--line)}
+.tag{display:inline-block;background:#e5f3e9;color:#0c6236;padding:7px 11px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.5px}.hero h1{font-size:clamp(38px,4.8vw,61px);line-height:1.02;letter-spacing:-2.5px;margin:17px 0}.hero p{font-size:17px;line-height:1.65;color:var(--muted);max-width:580px}.cta{display:inline-block;padding:13px 19px;margin-top:8px}.hero-art{height:330px;border-radius:24px;overflow:hidden;background:url("https://images.pexels.com/photos/7879834/pexels-photo-7879834.jpeg?auto=compress&cs=tinysrgb&w=1200") center/cover;box-shadow:0 18px 50px #0f6b3b1c}
+section{padding:42px 5%}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px;gap:15px}.section-head h2{margin:0;font-size:28px}.section-head p{margin:4px 0 0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 5px 18px #16322608;transition:.18s}.card:hover{transform:translateY(-2px);box-shadow:0 12px 28px #16322612}.pic{height:190px;border-radius:12px;background:#f5f7f4 center/cover no-repeat}.pic.potato{background-image:url("https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=700&q=85")}.pic.tomato{background-image:url("https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=700&q=85")}.pic.carrot{background-image:url("https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=700&q=85")}.pic.broccoli{background-image:url("https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=700&q=85")}.pic.rice{background-image:url("https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=700&q=85")}.pic.wheat{background-image:url("https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=700&q=85")}.pic.chana{background-image:url("https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=700&q=85")}.pic.moong{background-image:url("https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=700&q=85")}
+.card h3{margin:12px 2px 3px;font-size:17px}.meta{font-size:13px;color:var(--muted)}.price{display:flex;justify-content:space-between;align-items:center;margin-top:12px}.price strong{font-size:18px}.add{border:0;padding:8px 11px;background:#eaf5ed;color:var(--green);border-radius:9px;font-weight:850}
+.benefits{background:#fff}.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.benefit{padding:20px;border:1px solid var(--line);border-radius:15px;background:#fff}.benefit b{margin-left:5px}.benefit p{color:var(--muted);line-height:1.5;font-size:14px}
+footer{background:#103d27;color:#dce9df;padding:28px 5%;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:30;padding:15px;overflow:auto}.panel{max-width:620px;margin:25px auto;background:#fff;border-radius:20px;padding:25px;position:relative}.close{position:absolute;right:15px;top:12px;background:#eef3ef;width:35px;height:35px;border:0;border-radius:50%;font-size:22px}
+.tabs{display:flex;gap:7px;margin:15px 0}.tabs button{padding:9px 13px;background:#edf3ee;color:var(--green);border:0;border-radius:9px}.tabs .active{background:var(--green);color:#fff}label{display:block;font-weight:750;font-size:14px;margin:11px 0}input,textarea,select{width:100%;padding:11px;margin-top:5px;border:1px solid #d9e3dc;border-radius:10px;font:inherit;background:#fff}textarea{min-height:70px;resize:vertical}.form-actions{margin-top:15px}.msg{margin-top:12px;padding:11px;border-radius:10px;background:#eef8ef;display:none}.danger{background:#fff0f0!important;color:var(--danger)!important}.order{border:1px solid var(--line);border-radius:12px;padding:13px;margin:9px 0}.order small{color:var(--muted)}.cart-list{margin:15px 0}.cart-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.drawer-backdrop{display:none;position:fixed;inset:0;background:#0007;z-index:25}.drawer{position:fixed;left:-330px;top:0;bottom:0;width:310px;background:#fff;z-index:26;box-shadow:12px 0 35px #0002;transition:left .25s ease;padding:22px 18px}.drawer.open{left:0}.drawer-backdrop.open{display:block}.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:5px 5px 20px;border-bottom:1px solid var(--line)}.drawer-head h3{margin:0;font-size:20px}.drawer-close{background:#edf3ee;width:34px;height:34px;border:0;border-radius:50%;font-size:20px}.menu-list{padding:15px 0}.menu-item{display:flex;align-items:center;gap:13px;width:100%;padding:14px 13px;margin:4px 0;background:transparent;color:var(--dark);text-align:left;font-size:15px;border:0;border-radius:12px}.menu-item:hover{background:#edf7ef;color:var(--green)}.menu-icon{width:25px;text-align:center;font-size:20px}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.links{display:none}.benefit-grid{grid-template-columns:1fr}.pic{height:165px}}
+@media(max-width:520px){nav,section,.hero,footer{padding-left:4%;padding-right:4%}.brand-wrap{min-width:0}.logo{font-size:19px}.grid{gap:10px}.card{padding:9px}.pic{height:135px}.hero-art{height:240px}.hero{padding-top:35px}.account{display:none}}
+</style>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+<div class="top">🌱 BALKYNE FENDS • Free delivery across North India • </div>
+<nav>
+  <div class="brand-wrap"><button class="menu-btn" onclick="openMenu()" aria-label="Open menu">☰</button><div class="logo">BALKYNE <span>FENDS</span></div></div>
+  <div class="links"><a href="#vegetables">Vegetables</a><a href="#grains">Grains</a><a href="#why">Why us</a></div>
+  <div class="nav-actions"><button class="account" onclick="openAccount()">👤 <span id="accountText">Login</span></button><button class="cart" onclick="openCart()">🛒 <span id="count">0</span></button></div>
+</nav>
+
+<div id="menuBackdrop" class="drawer-backdrop" onclick="closeMenu()"></div>
+<aside id="menuDrawer" class="drawer" aria-label="Main menu">
+  <div class="drawer-head"><h3>BALKYNE FENDS</h3><button class="drawer-close" onclick="closeMenu()">×</button></div>
+  <div class="menu-list">
+    <button class="menu-item" onclick="goMenu('dashboard')"><span class="menu-icon">🏠</span><span>Dashboard</span></button>
+    <button class="menu-item" onclick="openCart();closeMenu()"><span class="menu-icon">🛒</span><span>Cart</span></button>
+    <button class="menu-item" onclick="openMyOrders();closeMenu()"><span class="menu-icon">📦</span><span>My Orders</span></button>
+    <button class="menu-item" onclick="openTrackOrders();closeMenu()"><span class="menu-icon">🚚</span><span>Track Order / Cancel / Modify</span></button>
+    <button class="menu-item" onclick="showWishlist();closeMenu()"><span class="menu-icon">❤️</span><span>Wishlist</span></button>
+    <button class="menu-item" onclick="goMenu('about')"><span class="menu-icon">ℹ️</span><span>About</span></button>
+    <button class="menu-item" onclick="goMenu('report')"><span class="menu-icon">⚠️</span><span>Report</span></button>
+    <button class="menu-item" onclick="openAccount();closeMenu()"><span class="menu-icon">👤</span><span>Registration / Login</span></button>
+    <button class="menu-item" onclick="menuLogout()"><span class="menu-icon">🚪</span><span>Logout</span></button>
+    <button class="menu-item" onclick="openAdmin();closeMenu()"><span class="menu-icon">🔐</span><span>Owner Dashboard</span></button>
+  </div>
+</aside>
+
+<header class="hero">
+  <div><span class="tag">FRESH • SIMPLE • NORTH INDIA</span><h1>Everyday groceries, delivered to your door.</h1><p>Shop vegetables and grains online with free delivery. Create an account to save your details and track your orders.</p><a class="cta" href="#vegetables">Shop now →</a></div>
+  <div class="hero-art">🥬 🥕 🌾</div>
+</header>
+
+<section id="vegetables"><div class="section-head"><div><h2>Fresh vegetables</h2><p>Carefully selected everyday kitchen essentials.</p></div><span class="tag">FRESH TODAY</span></div><div class="grid">
+<article class="card"><div class="pic potato" aria-label="Fresh potatoes"></div><h3>Potatoes</h3><div class="meta">1 kg • Fresh produce</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.8 • 320 reviews</span></div><div class="price"><strong>₹35</strong><span><button class="add" onclick="toggleWish('Potatoes')">♡</button> <button class="add" onclick="add('Potatoes',35)">Add</button></span></div></article>
+<article class="card"><div class="pic tomato" aria-label="Fresh tomatoes"></div><h3>Tomatoes</h3><div class="meta">1 kg • Fresh produce</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.7 • 210 reviews</span></div><div class="price"><strong>₹45</strong><span><button class="add" onclick="toggleWish('Tomatoes')">♡</button> <button class="add" onclick="add('Tomatoes',45)">Add</button></span></div></article>
+<article class="card"><div class="pic carrot" aria-label="Fresh carrots"></div><h3>Carrots</h3><div class="meta">500 g • Fresh produce</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.6 • 145 reviews</span></div><div class="price"><strong>₹30</strong><span><button class="add" onclick="toggleWish('Carrots')">♡</button> <button class="add" onclick="add('Carrots',30)">Add</button></span></div></article>
+<article class="card"><div class="pic broccoli" aria-label="Fresh broccoli"></div><h3>Broccoli</h3><div class="meta">500 g • Fresh produce</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.8 • 98 reviews</span></div><div class="price"><strong>₹55</strong><span><button class="add" onclick="toggleWish('Broccoli')">♡</button> <button class="add" onclick="add('Broccoli',55)">Add</button></span></div></article>
+</div></section>
+
+<section id="grains"><div class="section-head"><div><h2>Staple grains</h2><p>Reliable pantry staples for everyday cooking.</p></div><span class="tag">QUALITY GRAINS</span></div><div class="grid">
+<article class="card"><div class="pic rice" aria-label="Basmati rice"></div><h3>Basmati Rice</h3><div class="meta">5 kg • Long grain • Aged</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.7 • 540 reviews</span></div><div class="price"><strong>₹480</strong><span><button class="add" onclick="toggleWish('Basmati Rice')">♡</button> <button class="add" onclick="add('Basmati Rice',480)">Add</button></span></div></article>
+<article class="card"><div class="pic wheat" aria-label="Wheat"></div><h3>Wheat</h3><div class="meta">5 kg • Whole wheat grain</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.6 • 270 reviews</span></div><div class="price"><strong>₹260</strong><span><button class="add" onclick="toggleWish('Wheat')">♡</button> <button class="add" onclick="add('Wheat',260)">Add</button></span></div></article>
+<article class="card"><div class="pic chana" aria-label="Dal"></div><h3>Chana Dal</h3><div class="meta">1 kg • Premium split dal</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.8 • 190 reviews</span></div><div class="price"><strong>₹105</strong><span><button class="add" onclick="toggleWish('Chana Dal')">♡</button> <button class="add" onclick="add('Chana Dal',105)">Add</button></span></div></article>
+<article class="card"><div class="pic moong" aria-label="Moong Dal"></div><h3>Moong Dal</h3><div class="meta">1 kg • Premium split dal</div><div style="font-size:12px;margin-top:7px">★★★★★ <span style="color:var(--muted)">4.7 • 160 reviews</span></div><div class="price"><strong>₹125</strong><span><button class="add" onclick="toggleWish('Moong Dal')">♡</button> <button class="add" onclick="add('Moong Dal',125)">Add</button></span></div></article>
+</div></section>
+
+<section id="why" class="benefits"><div class="section-head"><h2>Why BALKYNE FENDS?</h2><p>Built for convenient grocery shopping.</p></div><div class="benefit-grid"><div class="benefit">🥬<b> Fresh selection</b><p>Vegetables and pantry staples in one place.</p></div><div class="benefit">🚚<b> Free delivery</b><p>Delivery across North India with a .</p></div><div class="benefit">🔐<b> Private accounts</b><p>Your profile and order records are protected by Supabase authentication and database policies.</p></div></div></section>
+<footer><div><strong>BALKYNE FENDS</strong><br>Vegetables & grains, delivered.</div><div>© 2026 BALKYNE FENDS</div></footer>
+
+<div id="accountModal" class="modal"><div class="panel"><button class="close" onclick="closeModal('accountModal')">×</button><h2 id="accountTitle">Account</h2>
+<div class="tabs"><button id="loginTab" class="active" onclick="showAuth('login')">Login</button><button id="signupTab" onclick="showAuth('signup')">Create account</button></div>
+<form id="authForm" onsubmit="authSubmit(event)"><label>Email<input id="authEmail" type="email" required></label><label>Password<input id="authPassword" type="password" minlength="6" required></label><div id="signupFields" style="display:none"><label>Full name<input id="signupName"></label><label>Mobile<input id="signupPhone" inputmode="numeric" pattern="[0-9]{10}"></label></div><div class="form-actions"><button class="primary" type="submit" id="authBtn">Login</button></div></form>
+<div id="accountView" style="display:none"><div class="account-info" id="profileBox"></div><h3>My orders</h3><div id="orders">Loading…</div><button class="account danger" onclick="logout()">Logout</button></div><div class="msg" id="authMsg"></div></div></div>
+
+<div id="cartModal" class="modal"><div class="panel"><button class="close" onclick="closeModal('cartModal')">×</button><h2>Your cart</h2><div id="cartList" class="cart-list"></div><div class="order-total" style="display:flex;justify-content:space-between;font-size:18px"><strong>Total</strong><strong id="cartTotal">₹0</strong></div><button class="primary" style="width:100%;margin-top:15px" onclick="startCheckout()">Checkout</button></div></div>
+
+<div id="checkoutModal" class="modal"><div class="panel"><button class="close" onclick="closeModal('checkoutModal')">×</button><h2>Checkout</h2><p style="color:var(--muted)">Free delivery • </p>
+<form onsubmit="placeOrder(event)"><label>Full name<input id="cName" required></label><label>Mobile number<input id="cPhone" required inputmode="numeric" pattern="[0-9]{10}"></label><label>Email<input id="cEmail" type="email" required></label><label>Full delivery address<textarea id="cAddress" required></textarea></label><label>PIN code<input id="cPin" required inputmode="numeric" pattern="[0-9]{6}"></label><label>Delivery instructions<textarea id="cInstructions"></textarea></label>
+<label>Payment method<select id="payment" required><option value="">Choose payment</option><option value="cod">Cash on Delivery</option><option value="upi">UPI</option><option value="card_netbanking">Card / Net Banking</option></select></label>
+<div style="display:flex;justify-content:space-between;margin-top:15px;font-size:18px"><strong>Total</strong><strong id="checkoutTotal">₹0</strong></div><button class="primary" style="width:100%;margin-top:15px" type="submit">Place order</button></form><div class="msg" id="checkoutMsg"></div></div></div>
+
+
+
+
+<div id="ordersModal" class="modal"><div class="panel" style="max-width:850px"><button class="close" onclick="closeModal('ordersModal')">×</button>
+  <h2>📦 My Orders</h2>
+  <p style="color:var(--muted)">Your orders and current status.</p>
+  <div id="myOrdersList">Loading…</div>
+</div></div>
+
+<div id="trackModal" class="modal"><div class="panel" style="max-width:850px"><button class="close" onclick="closeModal('trackModal')">×</button>
+  <h2>🚚 Track / Cancel / Modify</h2>
+  <p style="color:var(--muted)">You can cancel an eligible order or modify delivery details while it is still being processed.</p>
+  <div id="trackOrdersList">Loading…</div>
+</div></div>
+
+<div id="editOrderModal" class="modal"><div class="panel"><button class="close" onclick="closeModal('editOrderModal')">×</button>
+  <h2>✏️ Modify delivery details</h2>
+  <p style="color:var(--muted)">Product/price changes are not allowed here. For those changes, contact the store before processing starts.</p>
+  <input type="hidden" id="editOrderId">
+  <label>Delivery address<textarea id="editAddress" required></textarea></label>
+  <label>PIN code<input id="editPin" required inputmode="numeric" pattern="[0-9]{6}"></label>
+  <label>Delivery instructions<textarea id="editInstructions"></textarea></label>
+  <button class="primary" onclick="saveOrderChanges()">Save changes</button>
+  <div class="msg" id="editMsg"></div>
+</div></div>
+
+<div id="adminModal" class="modal"><div class="panel" style="max-width:1000px"><button class="close" onclick="closeModal('adminModal')">×</button>
+  <div id="adminLoginBox">
+    <h2>🔐 Owner Dashboard</h2>
+    <p style="color:var(--muted)">Private area for the BALKYNE FENDS owner.</p>
+    <label>Owner email<input id="adminEmail" type="email" required placeholder="Owner account email"></label>
+    <label>Password<input id="adminPassword" type="password" required></label>
+    <button class="primary" onclick="adminLogin()">Login to dashboard</button>
+    <div class="msg" id="adminMsg"></div>
+  </div>
+  <div id="adminDashboard" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <div><h2>📊 Owner Dashboard</h2><p style="color:var(--muted)">Orders and customer information.</p></div>
+      <button class="account danger" onclick="adminLogout()">Logout</button>
+    </div>
+    <div class="benefit-grid" style="margin:20px 0">
+      <div class="benefit"><b>🆕 New orders</b><h2 id="statNew">0</h2></div>
+      <div class="benefit"><b>📦 Total orders</b><h2 id="statOrders">0</h2></div>
+      <div class="benefit"><b>💰 Sales</b><h2 id="statSales">₹0</h2></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <button class="account" onclick="loadAdmin()">↻ Refresh</button>
+      <select id="statusFilter" onchange="loadAdmin()" style="width:auto"><option value="">All statuses</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="out_for_delivery">Out for delivery</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select>
+    </div>
+    <div id="adminOrders">Loading…</div>
+  </div>
+</div></div>
+
+<div id="infoModal" class="modal"><div class="panel"><button class="close" onclick="closeModal('infoModal')">×</button><div id="infoContent"></div></div></div>
+
+<script>
+
+function scrollToId(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function filterProducts(){
+  const q=(document.getElementById('searchBox')?.value||'').trim().toLowerCase();
+  document.querySelectorAll('.product').forEach(card=>{
+    card.style.display=(!q || (card.dataset.name||'').toLowerCase().includes(q) || card.innerText.toLowerCase().includes(q))?'block':'none';
+  });
+}
+
+const SUPABASE_URL = 'https://dkpazjmhahqpbsrgxlsp.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_TDxH6g8C5E-yIwwTSZlSaQ_NYdLJHUs';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let cart=[];
+
+function money(n){return '₹'+Number(n).toLocaleString('en-IN')}
+function add(name,price){cart.push({name,price});document.getElementById('count').textContent=cart.length;toast(name+' added to cart ✓')}
+function toast(t){let x=document.getElementById('toast');if(!x){x=document.createElement('div');x.id='toast';x.style='position:fixed;right:18px;bottom:18px;background:#173d29;color:#fff;padding:13px 17px;border-radius:12px;z-index:50';document.body.appendChild(x)}x.textContent=t;x.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.display='none',1700)}
+function openMenu(){document.getElementById('menuDrawer').classList.add('open');document.getElementById('menuBackdrop').classList.add('open')}
+function closeMenu(){document.getElementById('menuDrawer').classList.remove('open');document.getElementById('menuBackdrop').classList.remove('open')}
+function goMenu(page){closeMenu();if(page==='dashboard'){window.scrollTo({top:0,behavior:'smooth'});return}let c=document.getElementById('infoContent');if(page==='about'){c.innerHTML='<h2>About BALKYNE FENDS</h2><p style="color:var(--muted);line-height:1.7">BALKYNE FENDS is an online grocery storefront for vegetables and grains, with free delivery across North India.</p>'}else{c.innerHTML='<h2>Report a problem</h2><p style="color:var(--muted)">Tell us about an incorrect product, pricing issue, delivery problem or website issue.</p><label>Your message<textarea id="reportText" required placeholder="Describe the problem"></textarea></label><button class="primary" onclick="submitReport()">Submit report</button>'}document.getElementById('infoModal').style.display='block'}
+let wishlist=[];
+function toggleWish(name){if(wishlist.includes(name)){wishlist=wishlist.filter(x=>x!==name);toast(name+' removed from wishlist')}else{wishlist.push(name);toast(name+' added to wishlist ♥')}}
+function showWishlist(){let c=document.getElementById('infoContent');c.innerHTML='<h2>Wishlist</h2>'+(wishlist.length?'<div class="cart-list">'+wishlist.map(x=>'<div class="cart-row"><span>♥ '+x+'</span></div>').join('')+'</div>':'<p style="color:var(--muted)">Your wishlist is empty. Tap ♡ on a product to save it.</p>');document.getElementById('infoModal').style.display='block'}
+function submitReport(){let text=document.getElementById('reportText').value.trim();if(!text)return;toast('Report submitted ✓');closeModal('infoModal')}
+function closeModal(id){document.getElementById(id).style.display='none'}
+function openCart(){renderCart();document.getElementById('cartModal').style.display='block'}
+function renderCart(){let list=document.getElementById('cartList');if(!cart.length){list.innerHTML='<p>Your cart is empty.</p>';document.getElementById('cartTotal').textContent='₹0';return}list.innerHTML=cart.map((x,i)=>`<div class="cart-row"><span>${x.name}</span><span>${money(x.price)} <button onclick="removeItem(${i})">×</button></span></div>`).join('');document.getElementById('cartTotal').textContent=money(cart.reduce((a,x)=>a+x.price,0))}
+function removeItem(i){cart.splice(i,1);document.getElementById('count').textContent=cart.length;renderCart()}
+async function openAccount(){document.getElementById('accountModal').style.display='block';const {data:{session}}=await sb.auth.getSession();if(session){document.getElementById('authForm').style.display='none';document.querySelector('.tabs').style.display='none';document.getElementById('accountView').style.display='block';await loadAccount(session.user)}else{document.getElementById('authForm').style.display='block';document.querySelector('.tabs').style.display='flex';document.getElementById('accountView').style.display='none'}}
+function showAuth(type){let login=type==='login';document.getElementById('loginTab').classList.toggle('active',login);document.getElementById('signupTab').classList.toggle('active',!login);document.getElementById('authBtn').textContent=login?'Login':'Create account';document.getElementById('signupFields').style.display=login?'none':'block';document.getElementById('authForm').dataset.mode=type}
+async function authSubmit(e){e.preventDefault();let mode=e.currentTarget.dataset.mode||'login',email=authEmail.value.trim(),password=authPassword.value;if(mode==='login'){let r=await sb.auth.signInWithPassword({email,password});if(r.error)return showMsg('authMsg',r.error.message);showMsg('authMsg','Logged in ✓');setTimeout(openAccount,300)}else{let name=signupName.value.trim(),phone=signupPhone.value.trim();let r=await sb.auth.signUp({email,password,options:{data:{full_name:name,phone:phone}}});if(r.error)return showMsg('authMsg',r.error.message);showMsg('authMsg','Account created. Check your email if confirmation is enabled.');}}
+function showMsg(id,t){let e=document.getElementById(id);e.textContent=t;e.style.display='block'}
+async function loadAccount(user){let p=await sb.from('profiles').select('full_name,phone,email').eq('id',user.id).single();let profile=p.data||{email:user.email};document.getElementById('profileBox').innerHTML=`<strong>${profile.full_name||'Customer'}</strong><br>${profile.email||user.email}<br>${profile.phone||''}`;let o=await sb.from('orders').select('id,total_amount,payment_method,status,created_at').eq('customer_id',user.id).order('created_at',{ascending:false});document.getElementById('orders').innerHTML=o.data?.length?o.data.map(x=>`<div class="order"><strong>Order #${x.id.slice(0,8)}</strong><br>${money(x.total_amount)} • ${x.payment_method} • <strong>${x.status}</strong><br><small>${new Date(x.created_at).toLocaleString('en-IN')}</small></div>`).join(''):'No orders yet.'}
+async function logout(){await sb.auth.signOut();closeModal('accountModal');document.getElementById('accountText').textContent='Login'}
+async function startCheckout(){if(cart.length===0)return alert('Add products first.');let {data:{session}}=await sb.auth.getSession();if(!session){closeModal('cartModal');openAccount();showAuth('login');alert('Please create an account or login before checkout.');return}closeModal('cartModal');let p=await sb.from('profiles').select('*').eq('id',session.user.id).single();let d=p.data||{};cName.value=d.full_name||'';cPhone.value=d.phone||'';cEmail.value=d.email||session.user.email;cAddress.value=d.address||'';cPin.value=d.pin_code||'';cInstructions.value=d.delivery_instructions||'';checkoutTotal.textContent=money(cart.reduce((a,x)=>a+x.price,0));document.getElementById('checkoutModal').style.display='block'}
+async function placeOrder(e){e.preventDefault();let {data:{session}}=await sb.auth.getSession();if(!session)return alert('Please login.');let total=cart.reduce((a,x)=>a+x.price,0),paymentMethod=payment.value;let up=await sb.from('profiles').upsert({id:session.user.id,email:session.user.email,full_name:cName.value.trim(),phone:cPhone.value.trim(),address:cAddress.value.trim(),pin_code:cPin.value.trim(),delivery_instructions:cInstructions.value.trim()},{onConflict:'id'});if(up.error)return showMsg('checkoutMsg',up.error.message);let ins=await sb.from('orders').insert({customer_id:session.user.id,total_amount:total,payment_method:paymentMethod,status:'pending',shipping_name:cName.value.trim(),shipping_phone:cPhone.value.trim(),shipping_address:cAddress.value.trim(),shipping_pin:cPin.value.trim(),items:cart});if(ins.error)return showMsg('checkoutMsg',ins.error.message);if(paymentMethod==='upi'){showMsg('checkoutMsg','Order created. UPI payment gateway connection is required for live payment. Your configured UPI ID can be connected through a compliant payment gateway.');}else if(paymentMethod==='card_netbanking'){showMsg('checkoutMsg','Order created. Connect a payment gateway to collect live card/net-banking payments.');}else showMsg('checkoutMsg','Order placed successfully ✓');cart=[];document.getElementById('count').textContent='0'}
+
+
+function menuLogout(){closeMenu();logout();}
+
+async function getCurrentUser(){
+  const {data:{session}}=await sb.auth.getSession();
+  return session ? session.user : null;
+}
+
+async function openMyOrders(){
+  document.getElementById('ordersModal').style.display='block';
+  const user=await getCurrentUser();
+  if(!user){document.getElementById('myOrdersList').innerHTML='<p>Please login first.</p>';return}
+  await renderCustomerOrders('myOrdersList', false);
+}
+
+async function openTrackOrders(){
+  document.getElementById('trackModal').style.display='block';
+  const user=await getCurrentUser();
+  if(!user){document.getElementById('trackOrdersList').innerHTML='<p>Please login first.</p>';return}
+  await renderCustomerOrders('trackOrdersList', true);
+}
+
+async function renderCustomerOrders(targetId, controls){
+  const user=await getCurrentUser();
+  if(!user)return;
+  const r=await sb.from('orders').select('*').eq('customer_id',user.id).order('created_at',{ascending:false});
+  const box=document.getElementById(targetId);
+  if(r.error){box.innerHTML='<div class="msg" style="display:block">'+escapeHtml(r.error.message)+'</div>';return}
+  const orders=r.data||[];
+  if(!orders.length){box.innerHTML='<p style="color:var(--muted)">You have no orders yet.</p>';return}
+  box.innerHTML=orders.map(o=>{
+    const status=(o.status||'pending').replaceAll('_',' ');
+    const items=Array.isArray(o.items)?o.items.map(i=>i.name).join(', '):'Order items';
+    const canChange=['pending','confirmed','processing'].includes(o.status);
+    return `<div class="order" style="padding:16px;margin:12px 0">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <strong>Order #${o.id.slice(0,8)}</strong><strong>${money(o.total_amount)}</strong>
+      </div>
+      <p><strong>Items:</strong> ${escapeHtml(items)}<br>
+      <strong>Payment:</strong> ${escapeHtml(o.payment_method)}<br>
+      <strong>Status:</strong> <span style="text-transform:capitalize">${escapeHtml(status)}</span><br>
+      <small>${new Date(o.created_at).toLocaleString('en-IN')}</small></p>
+      ${controls && canChange ? `<button class="account" onclick="editOrder('${o.id}',${JSON.stringify(o.shipping_address||'')},${JSON.stringify(o.shipping_pin||'')},${JSON.stringify(o.delivery_instructions||'')})">✏️ Modify delivery</button>
+      <button class="account danger" onclick="cancelOrder('${o.id}')">✕ Cancel order</button>` : ''}
+      ${controls && !canChange && o.status!=='cancelled' && o.status!=='delivered' ? '<small style="color:var(--muted)">Changes are locked while this order is further along.</small>' : ''}
+    </div>`
+  }).join('');
+}
+
+async function cancelOrder(id){
+  if(!confirm('Cancel this order?'))return;
+  const user=await getCurrentUser();
+  if(!user)return;
+  const r=await sb.from('orders').update({status:'cancelled'}).eq('id',id).eq('customer_id',user.id).in('status',['pending','confirmed']);
+  if(r.error){alert(r.error.message);return}
+  toast('Order cancelled ✓');
+  renderCustomerOrders('trackOrdersList',true);
+}
+
+function editOrder(id,address,pin,instructions){
+  document.getElementById('editOrderId').value=id;
+  document.getElementById('editAddress').value=address;
+  document.getElementById('editPin').value=pin;
+  document.getElementById('editInstructions').value=instructions;
+  document.getElementById('editOrderModal').style.display='block';
+}
+
+async function saveOrderChanges(){
+  const id=document.getElementById('editOrderId').value;
+  const user=await getCurrentUser();
+  if(!user)return;
+  const r=await sb.from('orders').update({
+    shipping_address:document.getElementById('editAddress').value.trim(),
+    shipping_pin:document.getElementById('editPin').value.trim()
+  }).eq('id',id).eq('customer_id',user.id).in('status',['pending','confirmed']);
+  if(r.error){showMsg('editMsg',r.error.message);return}
+  await sb.from('profiles').update({
+    address:document.getElementById('editAddress').value.trim(),
+    pin_code:document.getElementById('editPin').value.trim(),
+    delivery_instructions:document.getElementById('editInstructions').value.trim()
+  }).eq('id',user.id);
+  showMsg('editMsg','Delivery details updated ✓');
+  setTimeout(()=>{closeModal('editOrderModal');renderCustomerOrders('trackOrdersList',true)},500);
+}
+
+
+let adminSession = null;
+
+async function openAdmin(){
+  document.getElementById('adminModal').style.display='block';
+  document.getElementById('adminLoginBox').style.display='block';
+  document.getElementById('adminDashboard').style.display='none';
+  const {data:{session}}=await sb.auth.getSession();
+  if(session){
+    const r=await sb.rpc('is_admin');
+    if(!r.error && r.data===true){adminSession=session;showAdminDashboard();loadAdmin();}
+  }
+}
+async function adminLogin(){
+  const email=document.getElementById('adminEmail').value.trim();
+  const password=document.getElementById('adminPassword').value;
+  const r=await sb.auth.signInWithPassword({email,password});
+  if(r.error){showMsg('adminMsg',r.error.message);return}
+  const a=await sb.rpc('is_admin');
+  if(a.error || a.data!==true){
+    await sb.auth.signOut();
+    showMsg('adminMsg','This account is not authorized as an owner/admin. Add its user ID to admin_users in Supabase first.');
+    return;
+  }
+  adminSession=r.data.session;
+  showAdminDashboard();
+  loadAdmin();
+}
+function showAdminDashboard(){document.getElementById('adminLoginBox').style.display='none';document.getElementById('adminDashboard').style.display='block'}
+async function adminLogout(){adminSession=null;await sb.auth.signOut();closeModal('adminModal')}
+async function loadAdmin(){
+  if(!adminSession)return;
+  let q=sb.from('orders').select('*').order('created_at',{ascending:false});
+  const filter=document.getElementById('statusFilter')?.value||'';
+  if(filter)q=q.eq('status',filter);
+  const r=await q;
+  if(r.error){document.getElementById('adminOrders').innerHTML='<div class="msg" style="display:block">'+escapeHtml(r.error.message)+'</div>';return}
+  const orders=r.data||[];
+  document.getElementById('statOrders').textContent=orders.length;
+  document.getElementById('statNew').textContent=orders.filter(o=>o.status==='pending').length;
+  document.getElementById('statSales').textContent=money(orders.reduce((s,o)=>s+Number(o.total_amount||0),0));
+  if(!orders.length){document.getElementById('adminOrders').innerHTML='<p style="color:var(--muted)">No orders found.</p>';return}
+  const ids=[...new Set(orders.map(o=>o.customer_id))];
+  const pr=ids.length?await sb.from('profiles').select('id,full_name,email,phone,address,pin_code').in('id',ids):{data:[]};
+  const profiles=new Map((pr.data||[]).map(p=>[p.id,p]));
+  document.getElementById('adminOrders').innerHTML=orders.map(o=>{
+    const p=profiles.get(o.customer_id)||{};
+    const items=Array.isArray(o.items)?o.items.map(i=>`${i.name} (${money(i.price)})`).join(', '):JSON.stringify(o.items);
+    return `<div class="order" style="padding:17px;margin:12px 0">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><strong>Order #${o.id.slice(0,8)}</strong><strong>${money(o.total_amount)}</strong></div>
+      <p><strong>Customer:</strong> ${escapeHtml(p.full_name||o.shipping_name||'—')}<br>
+      <strong>Phone:</strong> ${escapeHtml(p.phone||o.shipping_phone||'—')}<br>
+      <strong>Email:</strong> ${escapeHtml(p.email||'—')}<br>
+      <strong>Address:</strong> ${escapeHtml(p.address||o.shipping_address||'—')}, ${escapeHtml(p.pin_code||o.shipping_pin||'')}</p>
+      <p><strong>Items:</strong> ${escapeHtml(items)}<br><strong>Payment:</strong> ${escapeHtml(o.payment_method)}<br><small>${new Date(o.created_at).toLocaleString('en-IN')}</small></p>
+      <label>Status<select onchange="changeOrderStatus('${o.id}',this.value)">
+        ${['pending','confirmed','processing','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s.replaceAll('_',' ')}</option>`).join('')}
+      </select></label>
+    </div>`
+  }).join('');
+}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+async function changeOrderStatus(id,status){
+  const r=await sb.from('orders').update({status}).eq('id',id);
+  if(r.error)alert(r.error.message); else {toast('Order status updated ✓');loadAdmin()}
+}
+
+sb.auth.onAuthStateChange((_event,session)=>{document.getElementById('accountText').textContent=session?'Account':'Login'})
+</script>
+</body>
+</html>
