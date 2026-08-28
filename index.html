@@ -70,6 +70,12 @@ footer{background:#103d27;color:#dce9df;padding:28px 5%;display:flex;justify-con
 
 <div id="modal" class="modal"><div class="panel"><button class="close" onclick="closeModal()">×</button><div id="content"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://dkpazjmhahqpbsrgxlsp.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_TDxH6g8C5E-yIwwTSZlSaQ_NYdLJHUs';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+</script>
 <script>
 const SUPABASE_URL='https://dkpazjmhahqpbsrgxlsp.supabase.co';
 const SUPABASE_KEY='sb_publishable_TDxH6g8C5E-yIwwTSZlSaQ_NYdLJHUs';
@@ -99,7 +105,7 @@ function report(){closeMenu();popup('<h2>⚠️ Report an issue</h2><textarea pl
 function owner(){closeMenu();popup('<h2>🔐 Owner Dashboard</h2><p>Owner-only dashboard should be protected by Supabase authentication and database policies before production use.</p>')}
 function logout(){closeMenu();alert('Logged out (demo).')}
 function home(){closeMenu();scrollTo(0,0)}
-save()
+save(); refreshAuthUI()
 </script>
 </body>
 </html>
